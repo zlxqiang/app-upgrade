@@ -1,15 +1,7 @@
 var mongoose = require('../mongoose').mongoose;
+var UsersModel= require('../mongoose').usersModel;
 var crypto = require('crypto');
 
-var Schema = mongoose.Schema;
-
-var UsersSchema = new Schema({
-    username : { type:String },
-    password : { type:String },
-    time : { type:Date, default:Date.now }
-});
-
-var UsersModel = mongoose.model("users", UsersSchema);
 
 function login(username,password,callback) {
     var md5 = crypto.createHash('md5');
