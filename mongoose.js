@@ -29,6 +29,7 @@ mongoose.connection.on('connected', function (error, db) {
                 {
                     console.log('Error:'+ err);
                 }else{
+                    if(err.result)
                     console.log(err.result.n);
                 }
                 db.close();

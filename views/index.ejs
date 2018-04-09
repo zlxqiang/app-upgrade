@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
 
-    <link rel="stylesheet" href="layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="css/global.css" media="all">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
@@ -20,6 +20,7 @@
 
 <body>
 <div class="layui-layout layui-layout-admin" style="border-bottom: solid 5px #1aa094;">
+    <!--头-->
     <div class="layui-header header header-demo">
         <div class="layui-main">
             <div class="admin-login-box">
@@ -36,7 +37,7 @@
             <ul class="layui-nav admin-header-item">
                 <li class="layui-nav-item">
                     <a href="javascript:;" class="admin-header-user">
-                        <img src="img/0.jpg" />
+                        <img src="img/0.jpg"/>
                         <span>管理员</span>
                     </a>
                     <dl class="layui-nav-child">
@@ -53,9 +54,11 @@
             </ul>
         </div>
     </div>
+    <!--菜单-->
     <div class="layui-side layui-bg-black" id="admin-side">
         <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
     </div>
+    <!--body-->
     <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
         <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
             <ul class="layui-tab-title">
@@ -71,6 +74,7 @@
             </div>
         </div>
     </div>
+    <!--footer-->
     <div class="layui-footer footer footer-demo" id="admin-footer">
         <div class="layui-main">
             <p>2017 &copy;
@@ -87,7 +91,7 @@
     <script type="text/javascript" src="datas/nav.js"></script>
     <script src="js/index.js"></script>
     <script>
-        layui.use('layer', function() {
+        layui.use('layer', function () {
             var $ = layui.jquery,
                 layer = layui.layer;
 
