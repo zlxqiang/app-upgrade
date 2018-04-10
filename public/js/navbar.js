@@ -9,7 +9,7 @@ layui.define(['element', 'common'], function (exports) {
 
     var Navbar = function () {
 		/**
-		 *  默认配置 
+		 *  默认配置
 		 */
         this.config = {
             elem: undefined, //容器
@@ -154,7 +154,7 @@ layui.define(['element', 'common'], function (exports) {
                                         icon: icon,
                                         title: title
                                     }
-                                }
+                                };
                                 callback(data);
                             });
                         });
@@ -171,7 +171,7 @@ layui.define(['element', 'common'], function (exports) {
                                     icon: icon,
                                     title: title
                                 }
-                            }
+                            };
                             callback(data);
                         });
                     }
@@ -207,9 +207,9 @@ layui.define(['element', 'common'], function (exports) {
                         ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
                     }
                 }
-                ulHtml += '<cite>' + data[i].title + '</cite>'
+                ulHtml += '<cite>' + data[i].title + '</cite>';
                 ulHtml += '</a>';
-                ulHtml += '<dl class="layui-nav-child">'
+                ulHtml += '<dl class="layui-nav-child">';
                 for (var j = 0; j < data[i].children.length; j++) {
                     ulHtml += '<dd title="' + data[i].children[j].title + '">';
                     ulHtml += '<a href="javascript:;" data-url="' + data[i].children[j].href + '">';
@@ -235,7 +235,7 @@ layui.define(['element', 'common'], function (exports) {
                         ulHtml += '<i class="layui-icon" data-icon="' + data[i].icon + '">' + data[i].icon + '</i>';
                     }
                 }
-                ulHtml += '<cite>' + data[i].title + '</cite>'
+                ulHtml += '<cite>' + data[i].title + '</cite>';
                 ulHtml += '</a>';
             }
             ulHtml += '</li>';

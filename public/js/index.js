@@ -103,15 +103,15 @@ layui.config({
     });
     $('.admin-side-full').on('click', function () {
         var docElm = document.documentElement;
-        //W3C  
+        //W3C
         if (docElm.requestFullscreen) {
             docElm.requestFullscreen();
         }
-        //FireFox  
+        //FireFox
         else if (docElm.mozRequestFullScreen) {
             docElm.mozRequestFullScreen();
         }
-        //Chrome等  
+        //Chrome等
         else if (docElm.webkitRequestFullScreen) {
             docElm.webkitRequestFullScreen();
         }
@@ -182,9 +182,9 @@ function lock($, layer) {
                         $this.attr('type', 'text').val('输入密码解锁..');
                     }
                 });
-            //在此处可以写一个请求到服务端删除相关身份认证，因为考虑到如果浏览器被强制刷新的时候，身份验证还存在的情况			
+            //在此处可以写一个请求到服务端删除相关身份认证，因为考虑到如果浏览器被强制刷新的时候，身份验证还存在的情况
             //do something...
-            //e.g. 
+            //e.g.
 
             $.getJSON('/Account/Logout', null, function (res) {
                 if (!res.rel) {
@@ -232,4 +232,4 @@ function lock($, layer) {
             };
         }
     });
-};
+}

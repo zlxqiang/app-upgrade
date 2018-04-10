@@ -6,7 +6,7 @@ var navs = [
 		"children": [{
 			"title": "项目管理",
 			"icon": "&#xe641;",
-			"href": "/project"
+			"href": "/projectlist"
 		}]
 	},
     {

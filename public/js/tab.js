@@ -70,7 +70,7 @@ layui.define(['element', 'common'], function (exports) {
             var $cite = $(this).children('cite');
             if ($cite.text() === title) {
                 tabIndex = i;
-            };
+            }
         });
         return tabIndex;
     };
@@ -85,7 +85,7 @@ layui.define(['element', 'common'], function (exports) {
             var $cite = $(this).children('cite');
             if ($cite.text() === title) {
                 tabId = $(this).attr('lay-id');
-            };
+            }
         });
         return tabId;
     };
@@ -168,7 +168,7 @@ layui.define(['element', 'common'], function (exports) {
                         }
                     }
                 });
-            };
+            }
             //切换到当前打开的选项卡
             element.tabChange(ELEM.tabFilter, that.getTabId(data.title));
 
@@ -289,7 +289,7 @@ layui.define(['element', 'common'], function (exports) {
         var that = this;
         var _config = that.config;
         return $(_config.elem).find('ul.layui-tab-title').children('li.layui-this').attr('lay-id');
-    }
+    };
     /**
 	 * 删除指定的tab选项卡
 	 * @param {String} id
@@ -298,7 +298,7 @@ layui.define(['element', 'common'], function (exports) {
         var that = this;
         element.tabDelete(ELEM.tabFilter, id);
         return that;
-    }
+    };
 
     var tab = new Tab();
     exports(mod_name, function (options) {

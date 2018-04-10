@@ -2,22 +2,12 @@ var mongoose = require('../mongoose').mongoose;
 var Schema = mongoose.Schema;
 
 var ProjectSchema = new Schema({
-    name : { type:String },
-    version : { type:String },
-    download_path : { type:String },
-    is_force : { type:Boolean },
-    time : { type:Date, default:Date.now },
-    option_people:{ type:String },
-    is_delete:{ type:Boolean , default:false },
-    file_md5:{ type:String },
-    file_size:{ type:Number },
-    file_name:{ type:String },
-    remark : { type:String}
+    name : { type:String }
 });
 
-var ProjectModel = mongoose.model("project", ProjectSchema);
+var ProjectModel = mongoose.model("projectlist", ProjectSchema);
 
-function add(name,version,download_path,is_force,option_people,file_md5,file_size,file_name,remark,callback) {
+function add(name,callback) {
     ProjectModel.find({name:name,is_delete:false},function (err,data) {
         if(err){
             return callback(err,null);
@@ -25,13 +15,7 @@ function add(name,version,download_path,is_force,option_people,file_md5,file_siz
         if(data.length > 0){
             return callback('项目已存在',null);
         }
-        if(!is_force){
-            is_force = false
-        }else{
-            is_force = true;
-        }
-
-        var project = new ProjectModel({ name: name,version:version,download_path:download_path,is_force:is_force,option_people:option_people,file_md5:file_md5,file_size:file_size,file_name:file_name,remark:remark});
+        var project = new ProjectModel({ name: name});
         project.save(function (err) {
             if (err){
                 return callback(err,null);

@@ -53,9 +53,6 @@ router.get('/welcome', function(req, res, next) {
     res.render('welcome');
 });
 
-router.get('/project', function(req, res, next) {
-    res.render('project');
-});
 
 router.get('/pswset', function(req, res, next) {
     res.render('pswset');
@@ -65,6 +62,19 @@ router.get('/users', function(req, res, next) {
     res.render('users');
 });
 
+//工程列表
+router.get('/projectlist', function(req, res, next) {
+    res.render('projectlist');
+});
 
+//工程版本
+router.get('/projectversion', function(req, res, next) {
+    res.render('projectversion');
+});
+
+//工程插件
+router.get('/project', function(req, res, next) {
+    res.render('project');
+});
 
 module.exports = router;

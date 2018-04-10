@@ -19,7 +19,7 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
         loader = layui.loader,
         navbar = layui.navbar,
         _componentPath = 'components/';
-    tab = layui.tab
+    tab = layui.tab;
     var app = {
         hello: function(str) {
             layer.alert('Hello ' + (str || 'test'));
@@ -67,7 +67,7 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
                             default:
                                 break;
                         }
-                    };
+                    }
                 });
             }
             if (_config.type === 'iframe') {
@@ -87,7 +87,7 @@ layui.define(['element', 'nprogress', 'form', 'table', 'loader', 'tab', 'navbar'
                         return true; //返回true则关闭
                     }
                 }).render();
-                //navbar加载方式一，直接绑定已有的dom元素事件                
+                //navbar加载方式一，直接绑定已有的dom元素事件
                 navbar.bind(function(data) {
                     tab.tabAdd(data);
                 });

@@ -12,7 +12,7 @@ layui.define(['layer'], function(exports) {
 		 */
 		throwError: function(msg) {
 			throw new Error(msg);
-			return;
+
 		},
 		/**
 		 * 弹出一个错误提示
@@ -22,7 +22,7 @@ layui.define(['layer'], function(exports) {
 			layer.msg(msg, {
 				icon: 5
 			});
-			return;
+
 		}
 	};
 

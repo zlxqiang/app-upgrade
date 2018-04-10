@@ -17,8 +17,8 @@ function _get_file_md5(path) {
 
 var get_file_md5 = function get_file_md5(path) {
     var str =_get_file_md5(path);
-    return str.toString();
-}
+    return str;
+};
 
 
 function get_string_md5(str) {
