@@ -19,7 +19,7 @@ router.get('/query', function(req, res, next) {
             console.error(err);
             return res.send({code:400,msg:err.toLocaleString()});
         }
-        return res.send({code:200,msg:'查询成功',data:data});
+        return res.send({code:200,msg:'查询成功version',data:data});
     });
 
 });

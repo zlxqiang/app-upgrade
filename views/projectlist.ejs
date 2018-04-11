@@ -28,17 +28,9 @@
             <table class="layui-table admin-table">
                 <thead>
                 <tr>
-                    <th style="min-width: 30px;">序号</th>
                     <th>项目名称</th>
-                    <!--<th>版本号</th>-->
-                    <!--<th>文件下载路径</th>-->
-                    <!--<th>文件原名称</th>-->
-                    <!--<th>文件大小（Byte）</th>-->
-                    <!--<th>文件MD5值</th>-->
-                    <!--<th>是否强制更新</th>-->
-                    <!--<th>更新说明</th>-->
-                    <!--<th>更新时间</th>-->
                     <th>操作</th>
+                    <th>查看详情</th>
                 </tr>
                 </thead>
                 <tbody id="content">
@@ -57,7 +49,7 @@
         <legend id="legendName">项目添加</legend>
     </fieldset>
 
-    <form class="layui-form" action="#">
+    <form id="tpl_form" class="layui-form" action="#">
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block" style="width: 480px;">
@@ -78,16 +70,9 @@
 <script type="text/html" id="tpl_query">
     {{# layui.each(d.list, function(index, item){ }}
     <tr>
-        <td>{{ index+1 }}</td>
+        <!--<td>{{ index+1 }}</td>-->
+
         <td>{{ item.name }}</td>
-        <!--<td>{{ item.version }}</td>-->
-        <!--<td>{{ item.download_path }}</td>-->
-        <!--<td>{{ item.file_name }}</td>-->
-        <!--<td>{{ item.file_size }}</td>-->
-        <!--<td>{{ item.file_md5 }}</td>-->
-        <!--<td>{{ item.is_force }}</td>-->
-        <!--<td>{{ item.remark }}</td>-->
-        <!--<td>{{ item.time }}</td>-->
         <td>
             <div class="layui-btn-group">
                 <button class="layui-btn layui-btn-small btnEdit" data-id="{{ item._id }}">
@@ -96,9 +81,12 @@
                 <button class="layui-btn layui-btn-small btnDel" data-id="{{ item._id }}">
                     <i class="layui-icon">&#xe640;</i>
                 </button>
-
             </div>
         </td>
+        <td>
+            <a href="/projectlist/detail?{{item._id}}"><i class="layui-icon btnDetail" data-index="{{index}}"></i></a>
+        </td>
+
     </tr>
     {{# }); }}
     {{#  if(d.list.length === 0){ }}
@@ -114,7 +102,6 @@
             ,layer = layui.layer
             ,$ = layui.jquery
             ,laytpl = layui.laytpl
-            ,upload = layui.upload;
 
         //修改项目的ID
         var _id = '';
@@ -124,10 +111,11 @@
                 data.field.id = _id;
                 $.post('/projectlist/update',data.field,function (res) {
                     if(res.code == 200){
-                        layer.msg('修改成功');
-                        $('.admin-main').show();
-                        $('#tpl_add').hide();
                         get_project(1,100);
+                        layer.msg(res.msg);
+                        $('.admin-main').show();
+                        $('#tpl_form').get(0).reset();
+                        $('#tpl_add').hide();
                     }else{
                         layer.msg(res.msg);
                     }
@@ -135,10 +123,11 @@
             }else{
                 $.post('/projectlist/add',data.field,function (res) {
                     if(res.code == 200){
+                        get_project(1,100);
                         layer.msg('添加成功');
                         $('.admin-main').show();
+                        $('#tpl_form').get(0).reset();
                         $('#tpl_add').hide();
-                        get_project(1,100);
                     }else{
                         layer.msg(res.msg);
                     }
@@ -151,6 +140,7 @@
         form.on('submit(btnBack)', function(data){
             $('.admin-main').show();
             $('#tpl_add').hide();
+            $('#tpl_form').reset();
             return false;
         });
 
@@ -166,18 +156,12 @@
             $('.admin-main').hide();
             $('#tpl_add').show();
 
-            $("#name").attr('disabled','disabled');
+          //  $("#name").attr('disabled','disabled');
             $("#legendName").text('项目更新');
 
             var tr = $(this).parent().parent().parent();
 
-            $('input[name="name"]').val(tr.find('td:eq(1)').text());
-
-            if(tr.find('td:eq(7)').text() =='是'){
-                $('input[name="is_force"]').attr('checked','checked');
-            }else{
-                $('input[name="is_force"]').removeAttr('checked');
-            }
+            $('input[name="name"]').val(tr.find('td:eq(0)').text());
             form.render('checkbox');
             _id = $(this).attr('data-id');
 
@@ -185,7 +169,7 @@
 
         $(document).on('click','.btnDel',function () {
             var id = $(this).attr('data-id');
-            $.post('/projectlist/del',{id:id},function (res) {
+            $.post('/projectlist/delect',{id:id},function (res) {
                if(res.code == 200){
                    layer.msg('删除成功');
                    get_project(1,100);
@@ -197,12 +181,7 @@
 
         //init
         function get_project(page,size) {
-            $.get('/projectlist/query',{page:page,size:size},function (res) {
-                var dd = [];
-                res.data.forEach(function (info) {
-                    dd.push(info);
-                });
-
+            $.get('/projectlist/querylist',{page:page,size:size},function (res) {
                 var data = {
                     "title":"项目数据"
                     ,"list":res.data
