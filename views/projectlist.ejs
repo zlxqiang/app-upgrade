@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>项目管理</title>
-    <link rel="stylesheet" href="../layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="../css/global.css" media="all">
     <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
     <style>
-        td,th
-        {
+        td, th {
             white-space: nowrap;
         }
     </style>
@@ -18,26 +17,21 @@
 <body>
 <div class="admin-main">
     <blockquote class="layui-elem-quote">
-        <button  class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
+        <button class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
             <i class="layui-icon">&#xe608;</i> 添加项目
         </button>
     </blockquote>
-    <fieldset class="layui-elem-field">
-        <legend>项目列表</legend>
-        <div class="layui-field-box layui-form">
-            <table class="layui-table admin-table">
-                <thead>
-                <tr>
-                    <th>项目名称</th>
-                    <th>操作</th>
-                    <th>查看详情</th>
-                </tr>
-                </thead>
-                <tbody id="content">
-                </tbody>
-            </table>
-        </div>
-    </fieldset>
+    <table class="layui-table admin-table">
+        <thead>
+        <tr>
+            <th>项目名称</th>
+            <th>操作</th>
+            <th>查看详情</th>
+        </tr>
+        </thead>
+        <tbody id="content">
+        </tbody>
+    </table>
     <div class="admin-table-page">
         <div id="paged" class="page">
         </div>
@@ -53,7 +47,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block" style="width: 480px;">
-                <input id="name" type="text" name="name" lay-filter="name" lay-verify="required" autocomplete="off" placeholder="请输入项目名称" class="layui-input">
+                <input id="name" type="text" name="name" lay-filter="name" lay-verify="required" autocomplete="off"
+                       placeholder="请输入项目名称" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -84,7 +79,8 @@
             </div>
         </td>
         <td>
-            <a href="/projectlist/detail?id={{item._id}}"><i class="layui-icon btnDetail" data-index="{{index}}"></i></a>
+            <a href="/projectlist/detail?id={{item._id}}"><i class="layui-icon btnDetail"
+                                                             data-index="{{index}}"></i></a>
         </td>
 
     </tr>
@@ -97,38 +93,38 @@
 <script type="text/javascript" src="layui/layui.js"></script>
 <script type="text/javascript" src="js/dateFormater.js"></script>
 <script>
-    layui.use(['form', 'jquery','upload','laytpl'], function(){
+    layui.use(['form', 'jquery', 'upload', 'laytpl'], function () {
         var form = layui.form
-            ,layer = layui.layer
-            ,$ = layui.jquery
-            ,laytpl = layui.laytpl
+            , layer = layui.layer
+            , $ = layui.jquery
+            , laytpl = layui.laytpl
 
         //修改项目的ID
         var _id = '';
         //监听提交
-        form.on('submit(btnSubmit)', function(data){
-            if(_id){
+        form.on('submit(btnSubmit)', function (data) {
+            if (_id) {
                 data.field.id = _id;
-                $.post('/projectlist/update',data.field,function (res) {
-                    if(res.code == 200){
-                        get_project(1,100);
+                $.post('/projectlist/update', data.field, function (res) {
+                    if (res.code == 200) {
+                        get_project(1, 100);
                         layer.msg(res.msg);
                         $('.admin-main').show();
                         $('#tpl_form').get(0).reset();
                         $('#tpl_add').hide();
-                    }else{
+                    } else {
                         layer.msg(res.msg);
                     }
                 });
-            }else{
-                $.post('/projectlist/add',data.field,function (res) {
-                    if(res.code == 200){
-                        get_project(1,100);
+            } else {
+                $.post('/projectlist/add', data.field, function (res) {
+                    if (res.code == 200) {
+                        get_project(1, 100);
                         layer.msg('添加成功');
                         $('.admin-main').show();
                         $('#tpl_form').get(0).reset();
                         $('#tpl_add').hide();
-                    }else{
+                    } else {
                         layer.msg(res.msg);
                     }
                 });
@@ -137,14 +133,14 @@
             return false;
         });
 
-        form.on('submit(btnBack)', function(data){
+        form.on('submit(btnBack)', function (data) {
             $('.admin-main').show();
             $('#tpl_add').hide();
             $('#tpl_form').reset();
             return false;
         });
 
-        $(document).on('click','#addBtn',function () {
+        $(document).on('click', '#addBtn', function () {
             $('.admin-main').hide();
             $('#tpl_add').show();
             $("#name").removeAttr('disabled');
@@ -152,11 +148,11 @@
             _id = '';
         });
 
-        $(document).on('click','.btnEdit',function () {
+        $(document).on('click', '.btnEdit', function () {
             $('.admin-main').hide();
             $('#tpl_add').show();
 
-          //  $("#name").attr('disabled','disabled');
+            //  $("#name").attr('disabled','disabled');
             $("#legendName").text('项目更新');
 
             var tr = $(this).parent().parent().parent();
@@ -167,34 +163,34 @@
 
         });
 
-        $(document).on('click','.btnDel',function () {
+        $(document).on('click', '.btnDel', function () {
             var id = $(this).attr('data-id');
-            $.post('/projectlist/delect',{id:id},function (res) {
-               if(res.code == 200){
-                   layer.msg('删除成功');
-                   get_project(1,100);
-               } else{
-                   layer.msg('删除失败',{icon:6});
-               }
+            $.post('/projectlist/delect', {id: id}, function (res) {
+                if (res.code == 200) {
+                    layer.msg('删除成功');
+                    get_project(1, 100);
+                } else {
+                    layer.msg('删除失败', {icon: 6});
+                }
             });
         });
 
         //init
-        function get_project(page,size) {
-            $.get('/projectlist/querylist',{page:page,size:size},function (res) {
+        function get_project(page, size) {
+            $.get('/projectlist/querylist', {page: page, size: size}, function (res) {
                 var data = {
-                    "title":"项目数据"
-                    ,"list":res.data
+                    "title": "项目数据"
+                    , "list": res.data
                 };
                 var getTpl = tpl_query.innerHTML
-                    ,view = document.getElementById('content');
-                laytpl(getTpl).render(data, function(html){
+                    , view = document.getElementById('content');
+                laytpl(getTpl).render(data, function (html) {
                     view.innerHTML = html;
                 });
             });
         }
 
-        get_project(1,100);
+        get_project(1, 100);
     });
 
 </script>

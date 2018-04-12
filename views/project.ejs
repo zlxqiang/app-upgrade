@@ -20,38 +20,36 @@
         <button class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
             <i class="layui-icon">&#xe608;</i> 添加项目
         </button>
+        <button title="{{ item.download_path }}">复制</button>
+
         <label id="key" class=""></label>
     </blockquote>
-    <fieldset class="layui-elem-field">
-        <legend>项目列表</legend>
-        <div class="layui-field-box layui-form">
-            <table class="layui-table admin-table">
-                <thead>
-                <tr>
-                    <th style="min-width: 30px;">序号</th>
-                    <th>项目名称</th>
-                    <th>版本号</th>
-                    <th>文件下载路径</th>
-                    <th>文件原名称</th>
-                    <th>文件大小（Byte）</th>
-                    <th>文件MD5值</th>
-                    <th>是否强制更新</th>
-                    <th>更新说明</th>
-                    <th>更新时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody id="content">
-                </tbody>
-            </table>
-        </div>
-    </fieldset>
+    <table class="layui-table admin-table">
+        <thead>
+        <tr>
+            <th style="min-width: 30px;">序号</th>
+            <th>项目名称</th>
+            <th>版本号</th>
+            <th>文件路径</th>
+            <th>文件原名称</th>
+            <th>文件大小（Byte）</th>
+            <th>文件MD5值</th>
+            <th>是否强制更新</th>
+            <th>更新说明</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="content">
+        </tbody>
+    </table>
     <div class="admin-table-page">
         <div id="paged" class="page">
         </div>
     </div>
 </div>
 
+<!--添加-->
 <div id="tpl_add" style="display: none;">
     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
         <legend id="legendName">项目添加</legend>
@@ -79,7 +77,7 @@
                 <label class="layui-form-label">文件上传</label>
                 <div class="layui-input-inline" style="width: 480px;">
                     <input type="text" name="download_path" id="download_path" lay-filter="download_path"
-                           lay-verify="required" autocomplete="off"  class="layui-input"
+                           lay-verify="required" autocomplete="off" class="layui-input"
                            readonly="readonly">
                 </div>
                 <input type="hidden" name="file_name" id="file_name" class="layui-input">
@@ -116,11 +114,15 @@
 <!--模板-->
 <script type="text/html" id="tpl_query">
     {{# layui.each(d.list, function(index, item){ }}
-    <tr>
+    <tr id="{{ index }}">
         <td>{{ index+1 }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.version }}</td>
-        <td>{{ item.download_path }}</td>
+        <td>
+            <button id="copyBtn{{ index }}" class="btn"
+                    title="{{ item.download_path }}">复制
+            </button>
+        </td>
         <td>{{ item.file_name }}</td>
         <td>{{ item.file_size }}</td>
         <td>{{ item.file_md5 }}</td>
@@ -147,6 +149,9 @@
 
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script type="text/javascript" src="../js/dateFormater.js"></script>
+<script type="text/javascript" src="../clip/ZeroClipboard.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
 <script>
     layui.use(['form', 'jquery', 'upload', 'laytpl'], function () {
         var form = layui.form
@@ -170,7 +175,7 @@
         form.on('submit(btnSubmit)', function (data) {
             if (_id) {
                 data.field.id = _id;
-                data.field.index=getUrlParam("id");
+                data.field.index = getUrlParam("id");
                 $.post('/project/update', data.field, function (res) {
                     if (res.code == 200) {
                         layer.msg('修改成功');
@@ -183,7 +188,7 @@
                     }
                 });
             } else {
-                data.field.index=getUrlParam("id");
+                data.field.index = getUrlParam("id");
                 $.post('/project/add', data.field, function (res) {
                     if (res.code == 200) {
                         layer.msg('添加成功');
@@ -211,7 +216,7 @@
             elem: '#upload_file'
             , url: '/upload/'
             , accept: 'file'
-            ,exts: 'apk|dex'
+            , exts: 'apk|dex'
             , done: function (res) {
                 $("#download_path").val(res.data.file_path);
                 $("#file_md5").val(res.data.file_md5);
@@ -230,6 +235,14 @@
             $("#name").removeAttr('disabled');
             $("#legendName").text('项目添加');
             _id = '';
+        });
+
+        $(document).on('click', '#copyBtn', function () {
+            var content = $(this).attr('title');
+            // var clip = new ZeroClipboard($('#copyBtn'));
+            // clip.setText(content);
+            document.getElementById("copyValue").value = ""
+            document.getElementById("copyValue").value = content;
         });
 
         $(document).on('click', '.btnEdit', function () {
@@ -270,6 +283,7 @@
                 }
             });
         });
+
         function getUrlParam(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
             var r = window.location.search.substr(1).match(reg);
@@ -277,14 +291,15 @@
                 return unescape(r[2]);
             return null;
         }
+
         //init
         function get_project(page, size) {
-            var id=getUrlParam('id');
-            if(!id){
+            var id = getUrlParam('id');
+            if (!id) {
                 layer.msg("参数错误");
             }
-            document.getElementById('key').innerHTML='key:'+id;
-            $.get('/project/query', {id:id,page: page, size: size}, function (res) {
+            document.getElementById('key').innerHTML = 'key:' + id;
+            $.get('/project/query', {id: id, page: page, size: size}, function (res) {
                 if (res.code == 200) {
                     var dd = [];
                     res.data.forEach(function (info) {
@@ -306,6 +321,7 @@
                     laytpl(getTpl).render(data, function (html) {
                         view.innerHTML = html;
                     });
+                    copy();
                 }
                 else {
                     layer.msg(res.msg);
@@ -314,8 +330,32 @@
 
         }
 
+        function copy() {
+            $('.btn').bind('mouseover', function () {
+                var client = new ZeroClipboard($(this));
+                client.on("ready", function (readyEvent) {
+                    client.on("copy", function (event) {
+                        event.clipboardData.setData("text/plain", $(this).title)
+                    });
+                    client.on("aftercopy", function (event) {
+                        layer.msg('复制成功');
+                    });
+                });
+                $($(this)).unbind();
+            });
+        }
+
         get_project(1, 100);
 
+    });
+    $(function () {
+        $('#myModal').modal('hide')
+    });
+    $(function () {
+        $('#myModal').on('shown.bs.modal',
+            function () {
+
+            })
     });
 
 </script>
