@@ -20,6 +20,7 @@
         <button class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
             <i class="layui-icon">&#xe608;</i> 添加项目
         </button>
+        <label id="key" class=""></label>
     </blockquote>
     <fieldset class="layui-elem-field">
         <legend>项目列表</legend>
@@ -78,7 +79,7 @@
                 <label class="layui-form-label">文件上传</label>
                 <div class="layui-input-inline" style="width: 480px;">
                     <input type="text" name="download_path" id="download_path" lay-filter="download_path"
-                           lay-verify="required" autocomplete="off" accept=".apk" class="layui-input"
+                           lay-verify="required" autocomplete="off"  class="layui-input"
                            readonly="readonly">
                 </div>
                 <input type="hidden" name="file_name" id="file_name" class="layui-input">
@@ -86,7 +87,7 @@
                 <input type="hidden" name="file_md5" id="file_md5" class="layui-input">
             </div>
             <div class="layui-inline">
-                <button type="button" class="layui-btn" id="upload_file">上传图片</button>
+                <button type="button" class="layui-btn" id="upload_file">上传文件</button>
             </div>
         </div>
 
@@ -210,6 +211,7 @@
             elem: '#upload_file'
             , url: '/upload/'
             , accept: 'file'
+            ,exts: 'apk|dex'
             , done: function (res) {
                 $("#download_path").val(res.data.file_path);
                 $("#file_md5").val(res.data.file_md5);
@@ -281,6 +283,7 @@
             if(!id){
                 layer.msg("参数错误");
             }
+            document.getElementById('key').innerHTML='key:'+id;
             $.get('/project/query', {id:id,page: page, size: size}, function (res) {
                 if (res.code == 200) {
                     var dd = [];
