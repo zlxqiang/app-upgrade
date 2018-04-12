@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var ProjectSchema = new Schema({
     name : { type:String },
+    time : { type:Date, default:Date.now }
 });
 
 var ProjectModel = mongoose.model("projectlist", ProjectSchema);
@@ -67,6 +68,7 @@ function query(page,size,callback) {
     })
 
 }
+
 
 exports.add = add;
 exports.del = del;

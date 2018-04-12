@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var project_model = require('../model/projectlist');
+var project_list = require('../model/projectlist');
+var project_model = require('../model/project');
+
 
 router.get('/querylist', function(req, res, next) {
     var page = req.query.page || 1;
@@ -14,7 +16,7 @@ router.get('/querylist', function(req, res, next) {
         size = parseInt(size);
     }
 
-    project_model.query(page,size,function (err,data) {
+    project_list.query(page,size,function (err,data) {
         if(err){
             console.error(err);
             return res.send({code:400,msg:err.toLocaleString()});
@@ -35,7 +37,7 @@ router.post('/add', function(req, res, next) {
         return res.send({code:400,msg:'参数未传'});
     }
 
-    project_model.add(name,function (err,data) {
+    project_list.add(name,function (err,data) {
         if(err){
             console.error(err);
             return res.send({code:400,msg:err.toLocaleString()});
@@ -52,7 +54,7 @@ router.post('/delect', function(req, res, next) {
     if(!req.session.user){
         return res.send({code:400,msg:'未登录'});
     }
-    project_model.del(id,function (err,data) {
+    project_list.del(id,function (err,data) {
         if(err){
             console.error(err);
             return res.send({code:400,msg:err.toLocaleString()});
@@ -71,7 +73,7 @@ router.post('/update', function(req, res, next) {
     }
     var name = req.body.name ;
 
-    project_model.update(id,name,function (err,data) {
+    project_list.update(id,name,function (err,data) {
         if(err){
             console.error(err);
             return res.send({code:400,msg:err.toLocaleString()});
@@ -82,7 +84,7 @@ router.post('/update', function(req, res, next) {
 
 //工程
 router.get('/detail', function(req, res, next) {
-    res.render('projectlist');
+    return res.render('project',{id:req.query.id});
 });
 
 module.exports = router;

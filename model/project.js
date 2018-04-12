@@ -2,6 +2,7 @@ var mongoose = require('../mongoose').mongoose;
 var Schema = mongoose.Schema;
 
 var ProjectSchema = new Schema({
+    index:{type:String},//外键
     name : { type:String },
     version : { type:String },
     download_path : { type:String },
@@ -17,8 +18,8 @@ var ProjectSchema = new Schema({
 
 var ProjectModel = mongoose.model("project", ProjectSchema);
 
-function add(name,version,download_path,is_force,option_people,file_md5,file_size,file_name,remark,callback) {
-    ProjectModel.find({name:name,is_delete:false},function (err,data) {
+function add(index,name,version,download_path,is_force,option_people,file_md5,file_size,file_name,remark,callback) {
+    ProjectModel.find({index:index,name:name,is_delete:false},function (err,data) {
         if(err){
             return callback(err,null);
         }
@@ -31,7 +32,7 @@ function add(name,version,download_path,is_force,option_people,file_md5,file_siz
             is_force = true;
         }
 
-        var project = new ProjectModel({ name: name,version:version,download_path:download_path,is_force:is_force,option_people:option_people,file_md5:file_md5,file_size:file_size,file_name:file_name,remark:remark});
+        var project = new ProjectModel({index:index, name: name,version:version,download_path:download_path,is_force:is_force,option_people:option_people,file_md5:file_md5,file_size:file_size,file_name:file_name,remark:remark});
         project.save(function (err) {
             if (err){
                 return callback(err,null);
@@ -111,8 +112,19 @@ function check(name,ver,callback) {
 
 }
 
+function queryItem(page,size,id,callback) {
+    ProjectModel.find({index:id, is_delete: false}).skip( (page-1)*size ).limit(size).sort({time:-1}).exec(function (err, res) {
+        if (err) {
+            return callback(err,null);
+        }
+        return callback(null,res);
+    })
+
+}
+
 exports.add = add;
 exports.del = del;
 exports.update = update;
 exports.query = query;
+exports.queryItem=queryItem;
 exports.check = check;

@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>项目管理</title>
-    <link rel="stylesheet" href="layui/css/layui.css" media="all" />
-    <link rel="stylesheet" href="css/global.css" media="all">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all"/>
+    <link rel="stylesheet" href="../css/global.css" media="all">
+    <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
     <style>
-        td,th
-        {
+        td, th {
             white-space: nowrap;
         }
     </style>
@@ -18,7 +17,7 @@
 <body>
 <div class="admin-main">
     <blockquote class="layui-elem-quote">
-        <button  class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
+        <button class="layui-btn layui-btn-small" id="addBtn" lay-filter="addBtn">
             <i class="layui-icon">&#xe608;</i> 添加项目
         </button>
     </blockquote>
@@ -57,18 +56,20 @@
         <legend id="legendName">项目添加</legend>
     </fieldset>
 
-    <form class="layui-form" action="#">
+    <form class="layui-form" id="tpl_form" action="#">
         <div class="layui-form-item">
             <label class="layui-form-label">项目名称</label>
             <div class="layui-input-block" style="width: 480px;">
-                <input id="name" type="text" name="name" lay-filter="name" lay-verify="required" autocomplete="off" placeholder="请输入项目名称" class="layui-input">
+                <input id="name" type="text" name="name" lay-filter="name" lay-verify="required" autocomplete="off"
+                       placeholder="请输入项目名称" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">项目版本</label>
             <div class="layui-input-block" style="width: 480px;">
-                <input type="text" name="version" lay-filter="version"  lay-verify="required" placeholder="请输入项目版本" autocomplete="off" class="layui-input">
+                <input type="text" name="version" lay-filter="version" lay-verify="required" placeholder="请输入项目版本"
+                       autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -76,7 +77,9 @@
             <div class="layui-inline" style="width: 600px;">
                 <label class="layui-form-label">文件上传</label>
                 <div class="layui-input-inline" style="width: 480px;">
-                    <input type="text" name="download_path" id="download_path" lay-filter="download_path" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly">
+                    <input type="text" name="download_path" id="download_path" lay-filter="download_path"
+                           lay-verify="required" autocomplete="off" accept=".apk" class="layui-input"
+                           readonly="readonly">
                 </div>
                 <input type="hidden" name="file_name" id="file_name" class="layui-input">
                 <input type="hidden" name="file_size" id="file_size" class="layui-input">
@@ -141,49 +144,53 @@
     {{#  } }}
 </script>
 
-<script type="text/javascript" src="layui/layui.js"></script>
-<script type="text/javascript" src="js/dateFormater.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script type="text/javascript" src="../js/dateFormater.js"></script>
 <script>
-    layui.use(['form', 'jquery','upload','laytpl'], function(){
+    layui.use(['form', 'jquery', 'upload', 'laytpl'], function () {
         var form = layui.form
-            ,layer = layui.layer
-            ,$ = layui.jquery
-            ,laytpl = layui.laytpl
-            ,upload = layui.upload;
+            , layer = layui.layer
+            , $ = layui.jquery
+            , laytpl = layui.laytpl
+            , upload = layui.upload;
 
         //修改项目的ID
         var _id = '';
 
         //监听指定开关
-        form.on('switch(switchTest)', function(data){
-            layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+        form.on('switch(switchTest)', function (data) {
+            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
                 offset: '6px'
             });
             layer.tips('是否强制更新', data.othis)
         });
 
         //监听提交
-        form.on('submit(btnSubmit)', function(data){
-            if(_id){
+        form.on('submit(btnSubmit)', function (data) {
+            if (_id) {
                 data.field.id = _id;
-                $.post('/project/update',data.field,function (res) {
-                    if(res.code == 200){
+                data.field.index=getUrlParam("id");
+                $.post('/project/update', data.field, function (res) {
+                    if (res.code == 200) {
                         layer.msg('修改成功');
                         $('.admin-main').show();
                         $('#tpl_add').hide();
-                        get_project(1,100);
-                    }else{
+                        $('#tpl_form').get(0).reset();
+                        get_project(1, 100);
+                    } else {
                         layer.msg(res.msg);
                     }
                 });
-            }else{
-                $.post('/project/add',data.field,function (res) {
-                    if(res.code == 200){
+            } else {
+                data.field.index=getUrlParam("id");
+                $.post('/project/add', data.field, function (res) {
+                    if (res.code == 200) {
                         layer.msg('添加成功');
                         $('.admin-main').show();
                         $('#tpl_add').hide();
-                        get_project(1,100);
-                    }else{
+                        $('#tpl_form').get(0).reset();
+                        get_project(1, 100);
+                    } else {
                         layer.msg(res.msg);
                     }
                 });
@@ -192,7 +199,7 @@
             return false;
         });
 
-        form.on('submit(btnBack)', function(data){
+        form.on('submit(btnBack)', function (data) {
             $('.admin-main').show();
             $('#tpl_add').hide();
             return false;
@@ -201,21 +208,21 @@
         //上传
         upload.render({
             elem: '#upload_file'
-            ,url: '/upload/'
-            ,accept: 'file'
-            ,done: function(res){
+            , url: '/upload/'
+            , accept: 'file'
+            , done: function (res) {
                 $("#download_path").val(res.data.file_path);
                 $("#file_md5").val(res.data.file_md5);
                 $("#file_size").val(res.data.file_size);
                 $("#file_name").val(res.data.file_name);
                 layer.msg('上传成功');
             }
-            ,error: function(){
-                layer.msg('上传失败',{icon:6});
+            , error: function () {
+                layer.msg('上传失败', {icon: 6});
             }
         });
 
-        $(document).on('click','#addBtn',function () {
+        $(document).on('click', '#addBtn', function () {
             $('.admin-main').hide();
             $('#tpl_add').show();
             $("#name").removeAttr('disabled');
@@ -223,11 +230,11 @@
             _id = '';
         });
 
-        $(document).on('click','.btnEdit',function () {
+        $(document).on('click', '.btnEdit', function () {
             $('.admin-main').hide();
             $('#tpl_add').show();
 
-            $("#name").attr('disabled','disabled');
+            $("#name").attr('disabled', 'disabled');
             $("#legendName").text('项目更新');
 
             var tr = $(this).parent().parent().parent();
@@ -240,9 +247,9 @@
             $('input[name="file_md5"]').val(tr.find('td:eq(6)').text());
             $('textarea[name="remark"]').val(tr.find('td:eq(8)').text());
 
-            if(tr.find('td:eq(7)').text() =='是'){
-                $('input[name="is_force"]').attr('checked','checked');
-            }else{
+            if (tr.find('td:eq(7)').text() == '是') {
+                $('input[name="is_force"]').attr('checked', 'checked');
+            } else {
                 $('input[name="is_force"]').removeAttr('checked');
             }
             form.render('checkbox');
@@ -250,45 +257,61 @@
 
         });
 
-        $(document).on('click','.btnDel',function () {
+        $(document).on('click', '.btnDel', function () {
             var id = $(this).attr('data-id');
-            $.post('/project/del',{id:id},function (res) {
-               if(res.code == 200){
-                   layer.msg('删除成功');
-                   get_project(1,100);
-               } else{
-                   layer.msg('删除失败',{icon:6});
-               }
+            $.post('/project/del', {id: id}, function (res) {
+                if (res.code == 200) {
+                    layer.msg('删除成功');
+                    get_project(1, 100);
+                } else {
+                    layer.msg('删除失败', {icon: 6});
+                }
             });
         });
-
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return null;
+        }
         //init
-        function get_project(page,size) {
-            $.get('/project/query',{page:page,size:size},function (res) {
-                var dd = [];
-                res.data.forEach(function (info) {
-                    if(info.is_force){
-                        info.is_force = '是'
-                    }else{
-                        info.is_force = '否'
-                    }
-                    info.time = DateFormater(new Date(info.time));
-                    dd.push(info);
-                });
+        function get_project(page, size) {
+            var id=getUrlParam('id');
+            if(!id){
+                layer.msg("参数错误");
+            }
+            $.get('/project/query', {id:id,page: page, size: size}, function (res) {
+                if (res.code == 200) {
+                    var dd = [];
+                    res.data.forEach(function (info) {
+                        if (info.is_force) {
+                            info.is_force = '是'
+                        } else {
+                            info.is_force = '否'
+                        }
+                        info.time = DateFormater(new Date(info.time));
+                        dd.push(info);
+                    });
 
-                var data = {
-                    "title":"项目数据"
-                    ,"list":res.data
+                    var data = {
+                        "title": "项目数据"
+                        , "list": res.data
+                    }
+                    var getTpl = tpl_query.innerHTML
+                        , view = document.getElementById('content');
+                    laytpl(getTpl).render(data, function (html) {
+                        view.innerHTML = html;
+                    });
                 }
-                var getTpl = tpl_query.innerHTML
-                    ,view = document.getElementById('content');
-                laytpl(getTpl).render(data, function(html){
-                    view.innerHTML = html;
-                });
+                else {
+                    layer.msg(res.msg);
+                }
             });
+
         }
 
-        get_project(1,100);
+        get_project(1, 100);
 
     });
 

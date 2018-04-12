@@ -15,7 +15,7 @@ router.post('/upload', function(req, res, next) {
     //保留后缀
     form.keepExtensions = true;
     //设置单文件大小限制
-    form.maxFieldsSize = 100 * 1024 * 1024;
+    form.maxFieldsSize = 50 * 1024 * 1024;
     //form.maxFields = 1000;  设置所以文件的大小总和
 
     form.parse(req, function(err, fields, files) {
@@ -27,7 +27,7 @@ router.post('/upload', function(req, res, next) {
             return res.send({code:400,msg:'位置错误'});
         }
         md5.get_file_md5(file.path).then(function (result) {
-            var path = file.path.split('/');
+            var path = file.path.split('\\');
             var info = {
                 file_name:file.name,
                 file_md5:result,
@@ -67,10 +67,6 @@ router.get('/projectlist', function(req, res, next) {
     res.render('projectlist');
 });
 
-//工程版本
-router.get('/projectversion', function(req, res, next) {
-    res.render('projectversion');
-});
 
 //工程插件
 router.get('/project', function(req, res, next) {
