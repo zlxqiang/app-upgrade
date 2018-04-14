@@ -30,6 +30,45 @@ router.get('/query', function(req, res, next) {
 
 });
 
+/**
+ * app
+ */
+router.post('/query', function(req, res, next) {
+
+    var id = req.body.key;
+    if(!id){
+        return res.send({code:400,msg:'参数错误'});
+    }else{
+        var json=req.body.params;
+        var params;
+        if(json && json!='null'){
+            params=JSON.parse(json)
+        }
+        project_model.queryItem(1,100,id,function (err,data) {
+            if(err){
+                console.error(err);
+                return res.send({code:400,msg:err.toLocaleString()});
+            }
+            if(data && params){
+                var newArr = [];
+                var i=0;
+               data.forEach(function (item,index) {
+                   params.forEach(function (itemparams,ind) {
+                       if(item.file_md5!=itemparams.file_md5){
+                           newArr[i]=item;
+                           i++;
+                       }
+                   })
+               })
+                return res.send({code:200,msg:'查询成功',data:newArr});
+            }
+            return res.send({code:200,msg:'查询成功',data:data});
+        });
+    }
+
+
+});
+
 router.post('/add', function(req, res, next) {
     if(!req.session.user){
         return res.send({code:400,msg:'未登录'});

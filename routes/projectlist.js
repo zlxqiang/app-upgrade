@@ -26,6 +26,21 @@ router.get('/querylist', function(req, res, next) {
 
 });
 
+/**
+ * app
+ */
+router.post('/querylist', function(req, res, next) {
+
+    project_list.query(1,100,function (err,data) {
+        if(err){
+            console.error(err);
+            return res.send({code:400,msg:err.toLocaleString()});
+        }
+        return res.send({code:200,msg:'查询成功list',data:data});
+    });
+
+});
+
 router.post('/add', function(req, res, next) {
     if(!req.session.user){
         return res.send({code:400,msg:'未登录'});
